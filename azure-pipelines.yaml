@@ -192,7 +192,7 @@ stages:
 
                 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
                 sudo dpkg -i google-chrome-stable_current_amd64.deb
-                sudo apt-get -f install
+                sudo apt-get -y -f install
                 google-chrome --version
 
                 # download chrome driver
