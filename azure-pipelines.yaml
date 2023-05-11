@@ -1,0 +1,216 @@
+name: Azure Pipelines
+
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+trigger:
+  - main
+
+# ToDo: Replace the agent pool name, if you are using Udacity Cloud lab.
+# Otherwise comment out the line below.
+pool: myAgentPool
+
+variables:
+  python.version: "3.7.6"
+  # ToDo: Replace the service connection name as used in the DevOps project settings
+  azureServiceConnectionId: "myServiceConnection"
+  # Project root folder. Point to the folder containing manage.py file.
+  projectRoot: $(System.DefaultWorkingDirectory)
+  # Environment name
+  environmentName: "test"
+
+  webAppName: "samiazure-APP"
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildInfrastructure
+        steps:
+          - script: |
+              echo $(System.DefaultWorkingDirectory)
+            displayName: "Show working directory"
+
+          # Install Terraform on the pipeline agent
+          - task: TerraformInstaller@1
+            displayName: "Terrafom installation"
+            inputs:
+              terraformVersion: "latest"
+          - task: TerraformTaskV4@4
+            displayName: Terraform init
+            inputs:
+              provider: "azurerm"
+              command: "init"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+              backendServiceArm: "myServiceConnection"
+              backendAzureRmResourceGroupName: "Azuredevops"
+              backendAzureRmStorageAccountName: "samistkgv2ede"
+              backendAzureRmContainerName: "tfstate"
+              backendAzureRmKey: "terraform.tfstate"
+          - task: TerraformTaskV4@4
+            displayName: Terraform validate
+            inputs:
+              provider: "azurerm"
+              command: "validate"
+          - task: TerraformTaskV4@4
+            displayName: Terraform plan
+            inputs:
+              provider: "azurerm"
+              command: "plan"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+              environmentServiceNameAzureRM: "myServiceConnection"
+          - task: TerraformTaskV4@4
+            displayName: Terraform apply
+            inputs:
+              provider: "azurerm"
+              command: "apply"
+              workingDirectory: "$(System.DefaultWorkingDirectory)/terraform"
+              environmentServiceNameAzureRM: "myServiceConnection"
+
+          - task: ArchiveFiles@2
+            displayName: "Archive FakeRestAPI"
+            inputs:
+              rootFolderOrFile: "$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/fakerestapi"
+              includeRootFolder: false
+              archiveType: "zip"
+              archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip"
+              replaceExistingArchive: true
+
+          - upload: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-fakerestapi.zip"
+            displayName: "Upload zip"
+            artifact: drop
+
+  - stage: Deploy
+    displayName: Deploy stage
+    dependsOn: Build
+    jobs:
+      - deployment: DeployJob
+        pool: myAgentPool
+        environment: "$(environmentName)"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                    source: "current"
+                    artifact: "drop"
+                    path: "$(Pipeline.Workspace)"
+                - task: AzureWebApp@1
+                  displayName: "Deploy to Azure Web App"
+                  inputs:
+                    azureSubscription: "myServiceConnection"
+                    appType: "webApp"
+                    appName: "samiazure-APP"
+                    package: "$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip"
+                    deploymentMethod: "auto"
+
+  - stage: IntegrationTests
+    displayName: Integration Tests
+    jobs:
+      - job: IntegrationTests
+        steps:
+          - task: CmdLine@2
+            displayName: Install Newman
+            inputs:
+              script: |
+                sudo apt update
+                sudo apt install nodejs npm -y
+                sudo nodejs --version
+                sudo npm install -g newman
+          - task: CmdLine@2
+            displayName: Run Regression Tests
+            inputs:
+              script: "newman run automatedtesting/postman/RegressionTestSuite.json -e automatedtesting/postman/RegressionTestSuite.Environment.json --delay-request 5000 --bail newman -x --reporters cli,junit --reporter-junit-export Results/RegressionTests.xml"
+              workingDirectory: "$(System.DefaultWorkingDirectory)"
+            continueOnError: true
+          - task: CmdLine@2
+            displayName: Run Data Validation Tests
+            inputs:
+              script: "newman run automatedtesting/postman/DataValidationTestSuite.json -e automatedtesting/postman/DataValidationTestSuite.Environment.json --delay-request 5000 --bail newman -x --reporters cli,junit --reporter-junit-export Results/DataValidationTests.xml"
+              workingDirectory: "$(System.DefaultWorkingDirectory)"
+            continueOnError: true
+          - task: CmdLine@2
+            displayName: Show folder after integration test
+            inputs:
+              script: "ls"
+              workingDirectory: "$(System.DefaultWorkingDirectory)"
+          - task: PublishTestResults@2
+            displayName: Publish Test Reports
+            condition: always()
+            inputs:
+              testResultsFormat: "JUnit"
+              testResultsFiles: "$(System.DefaultWorkingDirectory)/Results/*.xml"
+
+  - stage: JMeterTests
+    displayName: JMeter Tests
+    jobs:
+      - job: PerformanceTests
+        steps:
+          - task: CmdLine@2
+            displayName: Install Java
+            inputs:
+              script: |
+                sudo apt-get update
+                sudo apt-get install -y openjdk-11-jdk
+          - task: JMeterInstaller@0
+            displayName: Install JMeter
+            inputs:
+              jmeterVersion: "5.2.1"
+          - task: Bash@3
+            displayName: EnduranceTest
+            inputs:
+              targetType: "inline"
+              script: "jmeter -n -t automatedtesting/jmeter/EnduranceTestSuite.jmx -Jresdir=automatedtesting/jmeter/endurancepages.csv -l automatedtesting/jmeter/report/enduranceresults.jtl -e -o automatedtesting/jmeter/endurancereport"
+          - task: Bash@3
+            displayName: StressTest
+            inputs:
+              targetType: "inline"
+              script: "jmeter -n -t automatedtesting/jmeter/StressTestSuite.jmx -Jresdir=automatedtesting/jmeter/stresspages.csv -l automatedtesting/jmeter/report/stressresults.jtl -e -o automatedtesting/jmeter/stressreport"
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: "automatedtesting/jmeter"
+              ArtifactName: "jmeter"
+              publishLocation: "Container"
+
+  - stage: UITesting
+    displayName: UI Testing
+    jobs:
+      - job: UITests
+        steps:
+          - task: CmdLine@2
+            displayName: Install Selenium
+            inputs:
+              targetType: "inline"
+              script: |
+                #! /bin/bash
+
+                sudo apt-get upgrade -y
+                sudo apt-get install python3-pip -y
+                sudo apt-get install unzip -y
+                sudo apt-get install -y chromium-browser
+                pip3 install selenium
+
+                wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+                sudo dpkg -i google-chrome-stable_current_amd64.deb
+                sudo apt-get -f install
+                google-chrome --version
+
+                # download chrome driver
+                FILE=chromedriver_linux64.zip
+                if [ -f "$FILE" ]; then
+                  echo "$FILE exists."
+                else
+                  wget https://chromedriver.storage.googleapis.com/94.0.4606.61/chromedriver_linux64.zip
+                fi
+                # install chrome driver
+                unzip chromedriver_linux64.zip
+                sudo mv chromedriver /usr/bin/chromedriver
+                chromedriver --version
+          - task: CmdLine@2
+            displayName: UI Tests
+            inputs:
+              targetType: "inline"
+              script: |
+                sudo mkdir -p /var/logs
+                python3 $(System.DefaultWorkingDirectory)/automatedtesting/selenium/login.py > ui-logs.log
+                sudo mv ui-logs.log /var/logs

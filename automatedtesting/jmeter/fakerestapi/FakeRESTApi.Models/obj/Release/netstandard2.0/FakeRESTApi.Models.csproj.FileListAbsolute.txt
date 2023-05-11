@@ -1,0 +1,10 @@
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\bin\Release\netstandard2.0\FakeRESTApi.Models.deps.json
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\bin\Release\netstandard2.0\FakeRESTApi.Models.dll
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\bin\Release\netstandard2.0\FakeRESTApi.Models.pdb
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\obj\Release\netstandard2.0\FakeRESTApi.Models.csproj.AssemblyReference.cache
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\obj\Release\netstandard2.0\FakeRESTApi.Models.GeneratedMSBuildEditorConfig.editorconfig
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\obj\Release\netstandard2.0\FakeRESTApi.Models.AssemblyInfoInputs.cache
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\obj\Release\netstandard2.0\FakeRESTApi.Models.AssemblyInfo.cs
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\obj\Release\netstandard2.0\FakeRESTApi.Models.csproj.CoreCompileInputs.cache
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\obj\Release\netstandard2.0\FakeRESTApi.Models.dll
+D:\_GITHUB_\fakerestapi\src\FakeRESTApi.Models\obj\Release\netstandard2.0\FakeRESTApi.Models.pdb
