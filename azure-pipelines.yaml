@@ -102,7 +102,8 @@ stages:
                     appType: "webApp"
                     appName: "samiazure-APP"
                     package: "$(Pipeline.Workspace)/drop/$(Build.BuildId)-fakerestapi.zip"
-                    deploymentMethod: "auto"
+                    deploymentMethod: zipDeploy
+                    startUpCommand: 'dotnet run --project FakeRESTApi.Web/'
 
   - stage: IntegrationTests
     displayName: Integration Tests
