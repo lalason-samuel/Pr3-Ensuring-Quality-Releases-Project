@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "VqXmB2Dc9v+VKPvJjGriJWpVL2B5VZQelacP7eCRoeOklnFOanpAGFCuNI5RwFkG79bNtlPQvssWfTnHYgwv8Q==",
+  "success": true,
+  "projectFilePath": "D:\\_GITHUB_\\fakerestapi\\src\\FakeRESTApi.Models\\FakeRESTApi.Models.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\barto\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\barto\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

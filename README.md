@@ -58,6 +58,8 @@ Pipeline UI test
 ![](./screenshots/pipeline_ui_tests.png)
 Logs by ui testing
 ![](./screenshots/pipeline_ui_tests_logs.png)
+Logs Ui testing selenium on the azure logs
+![](./screenshots/logs_ui_testing.png)
 
 ## Monitoring Azure Webapp
 Alerts monitoring send mail
