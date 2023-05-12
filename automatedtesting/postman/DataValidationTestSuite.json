@@ -250,33 +250,8 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var schema = {",
-							"    \"type\": \"object\",",
-							"    \"properties\": {",
-							"        \"status\"  : { \"type\": \"string\" },",
-							"        \"data\"    : { \"type\": \"string\" },",
-							"\t\t\"message\" : { \"type\": \"string\" }",
-							"    }",
-							"};",
-							"",
-							"pm.test('Validate schema', function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
-							"});",
-							"",
-							"pm.test(\"Validate Success\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.status).to.eql(\"success\");",
-							"});",
-							"",
-							"pm.test(\"Validate Id\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.data).to.eql(\"\"+pm.variables.get(\"id\"));",
-							"});",
-							"",
-							"pm.test(\"Validate Message\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.message).to.eql(\"Successfully! Record has been deleted\");",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -287,14 +262,13 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/delete/{{id}}",
+					"raw": "{{url}}/{{version}}/Authors/{{id}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
 						"{{version}}",
-						"delete",
+						"Authors",
 						"{{id}}"
 					]
 				},
