@@ -1,23 +1,26 @@
 {
 	"info": {
-		"_postman_id": "e825d326-caa4-42af-93fe-fa6dbea7b086",
+		"_postman_id": "179ce867-ed0b-4393-b7a1-eb096492e1a1",
 		"name": "Regression Test Suite",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19605186",
+		"_collection_link": "https://samiwell.postman.co/workspace/Team-Workspace~0a07d0b3-ad98-4432-8ce9-b62cc97af101/collection/19605186-179ce867-ed0b-4393-b7a1-eb096492e1a1?action=share&creator=19605186&source=collection_link"
 	},
 	"item": [
 		{
-			"name": "Create Employee",
+			"name": "Create Author",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "988df912-2263-4104-a8d2-fa3040143470",
 						"exec": [
 							"pm.test(\"Successful response\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"success\");",
+							"    pm.expect(pm.response.text()).to.include(\"id\");",
 							"});",
-							"var json = pm.response.json();",
-							"pm.environment.set(\"id\", json.data.id);"
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -28,7 +31,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{name}}\",\n    \"salary\": \"{{salary}}\",\n    \"age\": \"{{age}}\"\n}",
+					"raw": "{\n    \"id\": \"{{id}}\",\n    \"idBook\": \"{{idBook}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -36,63 +39,31 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/{{version}}/create",
+					"raw": "{{url}}/{{version}}/Authors",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
 						"{{version}}",
-						"create"
+						"Authors"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get All Employees",
+			"name": "Get All Author",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "fa00a819-48bb-401d-baa0-421ef9703bbd",
 						"exec": [
 							"pm.test(\"Successful response\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"success\");",
+							"    pm.expect(pm.response.text()).to.include(\"id\");",
 							"});",
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{url}}/api/{{version}}/employees",
-					"host": [
-						"{{url}}"
-					],
-					"path": [
-						"api",
-						"{{version}}",
-						"employees"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Employee",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "a6a01b07-1cfb-42b1-975d-0dc0ab02c8f9",
-						"exec": [
-							"pm.test(\"Successful response\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"success\");",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -103,14 +74,48 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/employee/{{id}}",
+					"raw": "{{url}}/{{version}}/Authors",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
 						"{{version}}",
-						"employee",
+						"Authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Author",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful response\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"id\");",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/{{version}}/Authors/{{id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"{{version}}",
+						"Authors",
 						"{{id}}"
 					]
 				},
@@ -119,15 +124,18 @@
 			"response": []
 		},
 		{
-			"name": "Update Employee",
+			"name": "Update Author",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "4b19fdaf-e717-4173-964b-544000cb6286",
 						"exec": [
 							"pm.test(\"Successful response\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"success\");",
+							"    pm.expect(pm.response.text()).to.include(\"id\");",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -139,7 +147,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{new_name}}\",\n    \"salary\": \"{{new_salary}}\",\n    \"age\": \"{{new_age}}\"\n}",
+					"raw": "{\n    \"id\": \"{{id}}\",\n    \"idBook\": \"{{idBook}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -147,14 +155,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/{{version}}/update/{{id}}",
+					"raw": "{{url}}/{{version}}/Authors/{{id}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
 						"{{version}}",
-						"update",
+						"Authors",
 						"{{id}}"
 					]
 				},
@@ -163,15 +170,14 @@
 			"response": []
 		},
 		{
-			"name": "Delete Employee",
+			"name": "Delete Author",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "7eb84325-7026-4b38-85b4-eb28adbf344e",
 						"exec": [
-							"pm.test(\"Successful response\", function () {",
-							"    pm.expect(pm.response.text()).to.include(\"success\");",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -182,14 +188,13 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/delete/{{id}}",
+					"raw": "{{url}}/{{version}}/Authors/{{id}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
 						"{{version}}",
-						"delete",
+						"Authors",
 						"{{id}}"
 					]
 				},
@@ -197,6 +202,5 @@
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

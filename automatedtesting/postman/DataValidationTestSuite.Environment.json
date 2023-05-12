@@ -1,10 +1,10 @@
 {
-	"id": "ea489154-e251-4c20-9e25-ea047bef6d6e",
+	"id": "906c5372-1446-4e45-9a54-6bbe4b50fe91",
 	"name": "Test Suite gi",
 	"values": [
 		{
 			"key": "url",
-			"value": "http://dummy.restapiexample.com",
+			"value": "http://fakerestapi.azurewebsites.net/api",
 			"enabled": true
 		},
 		{
@@ -14,41 +14,41 @@
 		},
 		{
 			"key": "id",
-			"value": "",
+			"value": "5",
 			"enabled": true
 		},
 		{
-			"key": "name",
-			"value": "test-user-1",
+			"key": "idBook",
+			"value": "3",
 			"enabled": true
 		},
 		{
-			"key": "salary",
-			"value": "100",
+			"key": "firstName",
+			"value": "Sami",
 			"enabled": true
 		},
 		{
-			"key": "age",
-			"value": "30",
+			"key": "lastName",
+			"value": "Well",
 			"enabled": true
 		},
 		{
-			"key": "new_name",
-			"value": "test-user-2",
+			"key": "idBook_5",
+			"value": "2",
 			"enabled": true
 		},
 		{
-			"key": "new_salary",
-			"value": "1000",
+			"key": "firstName_5",
+			"value": "First Name 5",
 			"enabled": true
 		},
 		{
-			"key": "new_age",
-			"value": "50",
+			"key": "lastName_5",
+			"value": "Last Name 5",
 			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2020-11-07T14:34:36.841Z",
-	"_postman_exported_using": "Postman/7.34.0"
+	"_postman_exported_at": "2023-05-12T06:05:02.909Z",
+	"_postman_exported_using": "Postman/10.13.5"
 }

@@ -1,41 +1,33 @@
 {
 	"info": {
-		"_postman_id": "0babe1cc-1801-43df-ac9d-c747d36911ac",
+		"_postman_id": "8ba51422-da20-4d87-8b4e-59d184eb13ba",
 		"name": "Data Validation Test Suite",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19605186",
+		"_collection_link": "https://samiwell.postman.co/workspace/Team-Workspace~0a07d0b3-ad98-4432-8ce9-b62cc97af101/collection/19605186-8ba51422-da20-4d87-8b4e-59d184eb13ba?action=share&creator=19605186&source=collection_link"
 	},
 	"item": [
 		{
-			"name": "Create Employee",
+			"name": "Create Authors",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "0d142dc7-9121-4bc2-8673-fe2cb634040e",
 						"exec": [
 							"var json = pm.response.json();",
-							"pm.environment.set(\"id\", json.data.id);",
-							"pm.variables.set(\"user_id\", json.data.id);",
+							"pm.environment.set(\"id\", json.id);",
+							"pm.variables.set(\"user_id\", json.id);",
 							"",
 							"var schema = {",
-							"    \"type\": \"object\",",
-							"    \"properties\": {",
-							"        \"status\"  : { \"type\": \"string\" },",
-							"        \"data\"    : { \"type\": \"object\",",
-							"                      \"properties\": {",
-							"                          \"id\": { \"type\": \"number\" },",
-							"                          \"name\": { \"type\": \"string\" },",
-							"                          \"salary\": { \"type\": \"string\" },",
-							"                          \"age\": { \"type\": \"string\" }",
-							"                      }",
-							"                    },",
-							"\t\t\"message\" : { \"type\": \"string\" }",
-							"    }",
+							"    \"id\": { \"type\": \"number\" },",
+							"    \"idBook\": { \"type\": \"number\" },",
+							"    \"firstName\": { \"type\": \"string\" },",
+							"    \"lastName\": { \"type\": \"string\" }",
 							"};",
 							"",
 							"pm.test(\"Validate Success\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.status).to.eql(\"success\");",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"id\"));",
 							"});",
 							"",
 							"pm.test('Validate schema', function () {",
@@ -45,9 +37,10 @@
 							"",
 							"pm.test(\"Validate Data\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.data.name).to.eql(pm.variables.get(\"name\"));",
-							"    pm.expect(jsonData.data.age).to.eql(pm.variables.get(\"age\"));",
-							"    pm.expect(jsonData.data.salary).to.eql(pm.variables.get(\"salary\"));",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"id\"));",
+							"    pm.expect(jsonData.idBook).to.eql(parseInt(pm.environment.get(\"idBook\")));",
+							"    pm.expect(jsonData.firstName).to.eql(pm.environment.get(\"firstName\"));",
+							"    pm.expect(jsonData.lastName).to.eql(pm.environment.get(\"lastName\"));",
 							"});"
 						],
 						"type": "text/javascript"
@@ -59,7 +52,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{name}}\",\n    \"salary\": \"{{salary}}\",\n    \"age\": \"{{age}}\"\n}",
+					"raw": "{\n    \"id\": \"{{id}}\",\n    \"idBook\": \"{{idBook}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -67,32 +60,32 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/{{version}}/create",
+					"raw": "{{url}}/{{version}}/Authors",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
 						"{{version}}",
-						"create"
+						"Authors"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get All Employees",
+			"name": "Get All Authors",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "5934de18-68a7-4f3b-a923-0b0f47383ccc",
 						"exec": [
 							"var schema = {",
-							"    \"type\": \"object\",",
-							"    \"properties\": {",
-							"        \"status\"  : { \"type\": \"string\" },",
-							"        \"data\"    : { \"type\": \"array\" }",
+							"    \"type\": \"array\",",
+							"    \"items\": {",
+							"        \"id\": { \"type\": \"number\" },",
+							"        \"idBook\": { \"type\": \"number\" },",
+							"        \"firstName\": { \"type\": \"string\" },",
+							"        \"lastName\": { \"type\": \"string\" }",
 							"    }",
 							"};",
 							"",
@@ -102,8 +95,7 @@
 							"});",
 							"",
 							"pm.test(\"Validate Success\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.status).to.eql(\"success\");",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -114,58 +106,52 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/employees",
+					"raw": "{{url}}/{{version}}/Authors",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
 						"{{version}}",
-						"employees"
+						"Authors"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Update Employee",
+			"name": "Update Authors",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "c64219f6-7ab0-404d-b90e-9035e7faf140",
 						"exec": [
-							"//per api description",
+							"var json = pm.response.json();",
+							"pm.environment.set(\"id\", json.id);",
+							"pm.variables.set(\"user_id\", json.id);",
+							"",
 							"var schema = {",
-							"    \"type\": \"object\",",
-							"    \"properties\": {",
-							"        \"status\"  : { \"type\": \"string\" },",
-							"        \"data\"    : { \"type\": \"object\",",
-							"                      \"properties\": {",
-							"                          \"name\": { \"type\": \"string\" },",
-							"                          \"salary\": { \"type\": \"string\" },",
-							"                          \"age\": { \"type\": \"string\" }",
-							"                      }",
-							"                    },",
-							"\t\t\"message\" : { \"type\": \"string\" }",
-							"    }",
+							"    \"id\": { \"type\": \"number\" },",
+							"    \"idBook\": { \"type\": \"number\" },",
+							"    \"firstName\": { \"type\": \"string\" },",
+							"    \"lastName\": { \"type\": \"string\" }",
 							"};",
+							"",
+							"pm.test(\"Validate Success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"id\"));",
+							"});",
 							"",
 							"pm.test('Validate schema', function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
 							"});",
 							"",
-							"pm.test(\"Validate Success\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.status).to.eql(\"success\");",
-							"});",
-							"",
 							"pm.test(\"Validate Data\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.data.name).to.eql(pm.variables.get(\"new_name\"));",
-							"    pm.expect(jsonData.data.salary).to.eql(pm.variables.get(\"new_salary\"));",
-							"    pm.expect(jsonData.data.age).to.eql(pm.variables.get(\"new_age\"));",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"id\"));",
+							"    pm.expect(jsonData.idBook).to.eql(parseInt(pm.environment.get(\"idBook\")));",
+							"    pm.expect(jsonData.firstName).to.eql(pm.environment.get(\"firstName\"));",
+							"    pm.expect(jsonData.lastName).to.eql(pm.environment.get(\"lastName\"));",
 							"});"
 						],
 						"type": "text/javascript"
@@ -177,7 +163,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{new_name}}\",\n    \"salary\": \"{{new_salary}}\",\n    \"age\": \"{{new_age}}\"\n}",
+					"raw": "{\n    \"id\": \"{{id}}\",\n    \"idBook\": \"{{idBook}}\",\n    \"firstName\": \"{{firstName}}\",\n    \"lastName\": \"{{lastName}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -185,14 +171,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}/api/{{version}}/update/{{id}}",
+					"raw": "{{url}}/{{version}}/Authors/{{id}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
 						"{{version}}",
-						"update",
+						"Authors",
 						"{{id}}"
 					]
 				},
@@ -206,40 +191,34 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "22129ac3-83d6-45d0-93dd-22597de953c7",
 						"exec": [
+							"var json = pm.response.json();",
+							"pm.environment.set(\"id\", json.id);",
+							"pm.variables.set(\"user_id\", json.id);",
+							"",
 							"var schema = {",
-							"    \"type\": \"object\",",
-							"    \"properties\": {",
-							"        \"status\"  : { \"type\": \"string\" },",
-							"        \"data\"    : { \"type\": \"object\",",
-							"                      \"properties\": {",
-							"                          \"id\": { \"type\": \"string\" },",
-							"                          \"employee_name\": { \"type\": \"string\" },",
-							"                          \"employee_salary\": { \"type\": \"string\" },",
-							"                          \"employee_age\": { \"type\": \"string\" }",
-							"                      }",
-							"                    },",
-							"\t\t\"message\" : { \"type\": \"string\" }",
-							"    }",
+							"    \"id\": { \"type\": \"number\" },",
+							"    \"idBook\": { \"type\": \"number\" },",
+							"    \"firstName\": { \"type\": \"string\" },",
+							"    \"lastName\": { \"type\": \"string\" }",
 							"};",
+							"",
+							"pm.test(\"Validate Success\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"id\"));",
+							"});",
 							"",
 							"pm.test('Validate schema', function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;",
 							"});",
 							"",
-							"pm.test(\"Validate Success\", function () {",
-							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.status).to.eql(\"success\");",
-							"});",
-							"",
 							"pm.test(\"Validate Data\", function () {",
 							"    var jsonData = pm.response.json();",
-							"    pm.expect(jsonData.data.id).to.eql(pm.variables.get(\"user_id\"));",
-							"    pm.expect(jsonData.data.employee_name).to.eql(pm.variables.get(\"name\"));",
-							"    pm.expect(jsonData.data.employee_salary).to.eql(pm.variables.get(\"salary\"));",
-							"    pm.expect(jsonData.data.employee_age).to.eql(pm.variables.get(\"age\"));",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"id\"));",
+							"    pm.expect(jsonData.idBook).to.eql(parseInt(pm.environment.get(\"idBook_5\")));",
+							"    pm.expect(jsonData.firstName).to.eql(pm.environment.get(\"firstName_5\"));",
+							"    pm.expect(jsonData.lastName).to.eql(pm.environment.get(\"lastName_5\"));",
 							"});"
 						],
 						"type": "text/javascript"
@@ -250,14 +229,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}/api/{{version}}/employee/{{id}}",
+					"raw": "{{url}}/{{version}}/Authors/{{id}}",
 					"host": [
 						"{{url}}"
 					],
 					"path": [
-						"api",
 						"{{version}}",
-						"employee",
+						"Authors",
 						"{{id}}"
 					]
 				},
@@ -271,7 +249,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "8202af13-5ad0-45c3-a35d-dcf335482367",
 						"exec": [
 							"var schema = {",
 							"    \"type\": \"object\",",
@@ -325,6 +302,5 @@
 			},
 			"response": []
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }
